@@ -6,70 +6,126 @@
   tasks:
 
   - name: Update host
-    dnf: name=* state=latest
+    dnf: 
+      name: "*"
+      state: latest
+    tags: 
+      - package-only
+      - main
 
   - name: Install essential packages
-    dnf: name={{item}} state=latest
-    with_items:
-      - autokey-gtk
-      - meld
-      - terminator
-      - gnome-tweak-tool
-      - gparted
-      - telnet
-      - keepassx
-      - httpie
-      - oathtool
-      - unzip
-      - xclip
-      - p7zip
-      - git
-      - alacarte
-      - NetworkManager-vpnc
-      - NetworkManager-openvpn
-      - vpnc
-      - openvpn
-      - vim
-      - gpaste
-      - gnome-shell-extension-gpaste
-      - libselinux-python
-      - java-1.8.0-openjdk-devel
-      - firefox
-      - kernel-devel
-      - ImageMagick
+    dnf: 
+      name: 
+        - autokey-gtk
+        - meld
+        - terminator
+        - gnome-tweak-tool
+        - gparted
+        - telnet
+        - keepassx
+        - httpie
+        - oathtool
+        - unzip
+        - xclip
+        - p7zip
+        - git
+        - alacarte
+        - NetworkManager-vpnc
+        - NetworkManager-openvpn
+        - vpnc
+        - openvpn
+        - vim
+        - gpaste
+        - gnome-shell-extension-gpaste
+        - libselinux-python
+        - java-1.8.0-openjdk-devel
+        - firefox
+        - kernel-devel
+        - ImageMagick
+        - zsh
+        - chrome-gnome-shell
+      state: latest    
+    tags: 
+      - package-only
+      - main
 
   - name: Install nautilus extensions
-    dnf: name={{item}} state=latest
-    with_items:
-      - nautilus-open-terminal
-      - nautilus-extensions
-      - nautilus-sendto
+    dnf: 
+      name: 
+        - nautilus-open-terminal
+        - nautilus-extensions
+        - nautilus-sendto
+        - nautilus-dropbox
+      state: latest
+    tags: 
+      - package-only
+      - main
 
   - name: Install KVM
-    dnf: name={{item}} state=latest
-    with_items:
-      - '@virtualization'
-      - virt-install
-      - virt-viewer
-      - libvirt-daemon-config-network
+    dnf: 
+      name: 
+        - '@virtualization'
+        - virt-install
+        - virt-viewer
+        - libvirt-daemon-config-network
+      state: latest
+    tags: 
+      - package-only
+      - main
 
-  - name: Add user to docker group
+  - name: Add user to libvirt group
     shell: usermod -aG libvirt gustavo
+    tags: 
+      - main
 
   - name: Enable libvirtd and start it
-    service: name=libvirtd enabled=yes state=started
+    service: 
+      name: libvirtd
+      enabled: yes
+      state: started
+    tags: 
+      - main
 
   - name: Disable firewalld
-    service: name=firewalld enabled=no state=stopped
+    service: 
+      name: firewalld
+      enabled: no 
+      state: stopped
+    tags: 
+      - main
 
   - name: Create apps folder
-    file: path=/home/gustavo/apps state=directory owner=gustavo group=gustavo
+    file: 
+      path: /home/gustavo/apps
+      state: directory
+      owner: gustavo
+      group: gustavo
+    tags: 
+      - main
 
   - name: Create fonts folder
-    file: path=/home/gustavo/.fonts/ state=directory owner=gustavo group=gustavo
+    file: 
+      path: /home/gustavo/.fonts/meslo
+      state: directory 
+      owner: gustavo
+      group: gustavo
+    tags: 
+      - main
 
   - name: Install fonts
-    unarchive: src=fonts.zip dest=/home/gustavo/.fonts/meslo owner=gustavo
+    unarchive: 
+      src: fonts.zip
+      dest: /home/gustavo/.fonts/meslo
+      owner: gustavo
+      group: gustavo
+    tags: 
+      - main
+  
+#  - name: Validating fonts
+#    shell: /usr/bin/fc-cache -v | grep meslo
+#    tags: 
+#      - main
+
 
   - name: Install google chrome
     dnf: name=https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm state=present
@@ -168,6 +224,8 @@
 
   - name: Disable selinux
     selinux: state=disabled
+    tags: 
+      - main
 #  - name: Install system monitor
 #mkdir ~/git_projects
 #cd ~/git_projects
@@ -178,20 +236,22 @@
 #rm -rf ~/git_projects
 #gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
 
- - name: Install nvm
-   shell: curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+  - name: Install nvm
+    shell: curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 
- - name: Install latest node
-   shell: nvm install node
+  - name: Install latest node
+    shell: nvm install node
 
-   - name: Install maven
-     shell: export MAVEN_VERSION=3.3.9 && curl -sSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | bsdtar xzf - -C /usr/share &&         mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven
+  - name: Install maven
+    shell: export MAVEN_VERSION=3.3.9 && curl -sSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | bsdtar xzf - -C /usr/share &&         mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven
 
-   - name: Install android sdk
-     shell:
+  - name: Install android sdk
+    shell:
 
-   - name: Set enviroment ANDROID_HOME
-     shell:
+  - name: Set enviroment ANDROID_HOME
+    shell:
 
-   - name: Install Apache Directory Studio
-     shell:
+  - name: Install Apache Directory Studio
+    shell:
+
+  - name: Install bluejeans app
